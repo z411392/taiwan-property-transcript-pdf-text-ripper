@@ -1,0 +1,20 @@
+name: 用 lint 作檢查
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+    - name: 拉取最新的程式碼
+      uses: actions/checkout@v4
+    - name: 設置 Python 環境
+      uses: ./.github/actions/setup-python-env
+    - name: 用 ruff 作 lint
+      run: |
+        uvx ruff check .

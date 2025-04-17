@@ -1,0 +1,8 @@
+.env
+*.egg-info
+.venv
+test.pdf
+test.txt
+sqlite.db
+main.spec
+**/__pycache__

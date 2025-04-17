@@ -1,0 +1,29 @@
+name: 執行測試
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    env:
+      OCR_SPACE_API_KEY: ${{ secrets.OCR_SPACE_API_KEY }}
+      SQLITE_DB_PATH: ${{ vars.SQLITE_DB_PATH }}
+      TZ: ${{ vars.TZ }}
+    steps:
+    - name: 拉取最新的程式碼
+      uses: actions/checkout@v4
+    - name: 設置 Python 環境
+      uses: ./.github/actions/setup-python-env
+    - name: 安裝依賴
+      shell: pwsh
+      run: |
+        uv pip install .
+        uv pip install '.[dev]'
+    - name: 用 pytest 執行測試
+      run: |
+        uv run pytest
