@@ -1,0 +1,25 @@
+name: 編譯 .exe
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: 拉取最新的程式碼
+      uses: actions/checkout@v4
+    - name: 設置 Python 環境
+      uses: ./.github/actions/setup-python-env
+    - name: 安裝依賴
+      shell: pwsh
+      run: |
+        uv pip install .
+    - name: 啟用虛擬環境並編譯 .exe
+      run: |
+        uvx pyinstaller --onefile --distpath bin --name main --icon ./assets/icon.ico --clean --noconfirm --hidden-import=dependency_injector.errors --hidden-import=aiosqlite main.py
+    - name: 將 .exe 存為 artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: PDF文字抽取器-win-x64.exe
+        path: bin/main.exe
