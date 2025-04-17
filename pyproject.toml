@@ -1,0 +1,46 @@
+[project]
+name = "taiwan-property-transcript-pdf-text-ripper"
+version = "0.1.0"
+description = "Taiwan property transcript PDF text ripper"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "aiohttp",
+    "pymupdf",
+    "pydantic",
+    "dependency_injector",
+    "aiofiles",
+    "sqlalchemy",
+    "aiosqlite",
+    "greenlet",
+    "shortuuid",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-testdox",
+    "pyinstaller",
+    "pillow", # 在 windows 編譯時轉 icon 會用到
+    "tzdata", # windows IANA tzdata（時區資料庫
+]
+
+[tool.pytest.ini_options]
+env_files = ".env"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = [
+    "ignore::pytest.PytestAssertRewriteWarning",
+    "ignore:builtin type SwigPyPacked has no __module__ attribute",
+    "ignore:builtin type SwigPyObject has no __module__ attribute",
+    "ignore:builtin type swigvarlink has no __module__ attribute",
+]
+addopts = [
+    "-s",
+    "--testdox",
+]
+testpaths = [
+    "tests",
+]
+pythonpath = ["./src"]
