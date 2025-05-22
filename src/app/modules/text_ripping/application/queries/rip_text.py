@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from app.adapters.http.ocr_space import OCRSpace
-from app.infrastructure.media_handlers.document_handlers.pdf_text_ripper import (
+from app.infrastructure.helpers.documents.pdf_text_ripper import (
     PDFTextRipper,
 )
 from io import StringIO
@@ -8,6 +8,7 @@ from app.adapters.sqlite.ocr_result_repository import OCRResultRepository
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from app.infrastructure.hashers.bytes_hasher import BytesHasher
 from re import sub
+from injector import inject
 
 
 class RippingPDFText(BaseModel):
@@ -16,20 +17,18 @@ class RippingPDFText(BaseModel):
 
 class RipPDFText:
     _ocr_space: OCRSpace
-    _ocr_result_repository: OCRResultRepository
     _make_session: async_sessionmaker[AsyncSession]
     _bytes_hasher: BytesHasher
 
+    @inject
     def __init__(
         self,
         /,
         ocr_space: OCRSpace,
-        ocr_result_repository: OCRResultRepository,
         make_session: async_sessionmaker[AsyncSession],
         bytes_hasher: BytesHasher,
     ):
         self._ocr_space = ocr_space
-        self._ocr_result_repository = ocr_result_repository
         self._make_session = make_session
         self._bytes_hasher = bytes_hasher
 

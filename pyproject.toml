@@ -7,7 +7,7 @@ dependencies = [
     "aiohttp",
     "pymupdf",
     "pydantic",
-    "dependency_injector",
+    "injector",
     "aiofiles",
     "sqlalchemy",
     "aiosqlite",

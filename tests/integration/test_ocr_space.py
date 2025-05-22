@@ -1,21 +1,15 @@
 import pytest
-from app.bootstrap import bootstrap
-from app.container import Container
 from app.adapters.http.ocr_space import OCRSpace
 from os import getenv
+from app.lifespan import lifespan
 
 
 @pytest.mark.skipif(getenv("GITHUB_ACTIONS") != "true", reason="")
 class TestOCRSpace:
     @pytest.fixture
-    async def container(self):
-        async with bootstrap() as container:
-            yield container
-
-    @pytest.fixture
-    async def ocr_space(self, container: Container):
-        ocr_space = container.ocr_space()
-        return ocr_space
+    async def ocr_space(self):
+        async with lifespan() as injector:
+            yield injector.get(OCRSpace)
 
     @pytest.mark.describe("要能夠 ocr")
     async def test_ocr(

@@ -1,20 +1,15 @@
 import pytest
-from app.bootstrap import bootstrap
-from app.container import Container
 from app.infrastructure.hashers.bytes_hasher import BytesHasher
 from os import getenv
+from app.lifespan import lifespan
 
 
 @pytest.mark.skipif(getenv("GITHUB_ACTIONS") != "true", reason="")
 class TestBytesHasher:
     @pytest.fixture
-    async def container(self):
-        async with bootstrap() as container:
-            yield container
-
-    @pytest.fixture
-    async def bytes_hasher(self, container: Container):
-        return container.bytes_hasher()
+    async def bytes_hasher(self):
+        async with lifespan() as injector:
+            yield injector.get(BytesHasher)
 
     @pytest.mark.describe("要能夠產生 bytes 的 uuid")
     async def test_bytes_uuid(

@@ -1,22 +1,16 @@
 import pytest
-from app.bootstrap import bootstrap
-from app.container import Container
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from app.adapters.sqlite.ocr_result_repository import OCRResultRepository
 from os import getenv
+from app.lifespan import lifespan
 
 
 @pytest.mark.skipif(getenv("GITHUB_ACTIONS") != "true", reason="")
 class TestSQLite:
     @pytest.fixture
-    async def container(self):
-        async with bootstrap() as container:
-            yield container
-
-    @pytest.fixture
-    async def make_session(self, container: Container):
-        make_session = await container.make_session()
-        return make_session
+    async def make_session(self):
+        async with lifespan() as injector:
+            yield injector.get(async_sessionmaker[AsyncSession])
 
     @pytest.mark.describe("要能夠用 SQLite 儲存 OCR 結果")
     async def test_sqlite_save_ocr_result(
