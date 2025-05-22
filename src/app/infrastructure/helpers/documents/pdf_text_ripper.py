@@ -22,11 +22,26 @@ class PDFTextRipper:
                 if block["type"] == 1:
                     yield True, block["image"]
 
+    def _from_fullwidth_to_halfwidth(self, content: str):
+        table = {
+            **{
+                ord(f): ord(t)
+                for f, t in zip(
+                    map(chr, range(0xFF01, 0xFF5F)), map(chr, range(0x21, 0x7F))
+                )
+            },
+            0x3000: 0x20,  # 全形空白
+            0x2027: ord("."),  # 中點符號 ‧
+            0x30FB: ord("."),  # 日文中點 ・
+        }
+        return content.translate(table)
+
     def _process_text_block(self, block):
         for line in block["lines"]:
             for span in line["spans"]:
                 text: str = span["text"]
                 normalized = sub(r"\((.)\)", r"\1", normalize("NFKD", text))
-                content = normalized.strip()
+                halfwidthed = self._from_fullwidth_to_halfwidth(normalized)
+                content = halfwidthed.strip()
                 if content:
                     yield content
