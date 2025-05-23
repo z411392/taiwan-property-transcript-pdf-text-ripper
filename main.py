@@ -1,8 +1,8 @@
-from app.lifespan import lifespan
+from src.app.lifespan import lifespan
 from asyncio import run
 from pathlib import Path
 from sys import argv
-from app.modules.text_ripping.presentation.cli.on_ripping_pdf_text import (
+from src.app.modules.text_ripping.presentation.cli.on_ripping_pdf_text import (
     on_ripping_pdf_text,
 )
 

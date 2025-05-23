@@ -22,6 +22,7 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "pytest-testdox",
+    "pyinstaller",
 ]
 
 [tool.pytest.ini_options]

@@ -12,14 +12,13 @@ export
 	tree
 
 build:
-	@uvx pyinstaller \
+	@uv run pyinstaller \
 		--onefile \
 		--distpath bin \
 		--name main \
 		--icon ./assets/icon.ico \
 		--clean \
 		--noconfirm \
-		--hidden-import=dependency_injector.errors \
 		--hidden-import=aiosqlite \
 	main.py
 

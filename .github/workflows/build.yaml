@@ -15,9 +15,10 @@ jobs:
       shell: pwsh
       run: |
         uv pip install .
+        uv pip install '.[dev]'
     - name: 啟用虛擬環境並編譯 .exe
       run: |
-        uvx pyinstaller --onefile --distpath bin --name main --icon ./assets/icon.ico --clean --noconfirm --hidden-import=dependency_injector.errors --hidden-import=aiosqlite main.py
+        uv run pyinstaller --onefile --distpath bin --name main --icon ./assets/icon.ico --clean --noconfirm --hidden-import=dependency_injector.errors --hidden-import=aiosqlite main.py
     - name: 將 .exe 存為 artifact
       uses: actions/upload-artifact@v4
       with:
